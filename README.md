@@ -1,4 +1,4 @@
-# Sample code for "WEIGHTED BIOMARKER VARIABILITY IN JOINT ANALYSIS OF LONGITUDINAL AND TIME-TO-EVENT DATA"
+# Sample code for "Weighted biomarker variability in joint analysis of longitudinal and time-to-event data"
 Files in this repository are R codes for simulation studies in our paper "Weighted biomarker variability in joint analysis of longitudinal and time-to-event data" submitted to Annals of Applied Statistics.
 
 Article: Weighted Biomarker Variability in Joint Analysis of Longitudinal and Time-to-Event Data
