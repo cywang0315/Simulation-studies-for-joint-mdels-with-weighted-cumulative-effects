@@ -54,12 +54,16 @@ SIMULATE=function(s){
   sig2=initialvalue$sig2
   res.ts=c(coxts,beta,sigma2,diag(D))
   
+  ##Log-likelihood under the initial value obtained from the two-stage approach
   loglik=try(logLik(data,data.id,gamma,alpha1,alpha2,beta,sigma2,D,cumbase,knots,Q.2,sig1,sig2,L=2000))
   if ('try-error' %in% class(loglik)) {
     return(numeric(41))
   }
+
+  ##Joint approach
+  ##Outer iteration for the joint approach
   for (k in 1:10){
-    ### UPDATE PARAMETERS VIA EM ALGORITHM
+    ###UPDATE PARAMETERS VIA EM ALGORITHM
     res.EM=try(est.EM(loglik,data,data.id,gamma,alpha1,alpha2,cumbase,beta,sigma2,D,knots,Q.2,sig1,sig2))
     if ('try-error' %in% class(res.EM)) {
       return(numeric(41))
@@ -103,7 +107,4 @@ SIMULATE=function(s){
 }
 
 RES=sfLapply(1:20,SIMULATE)
-RESt=t(matrix(unlist(RES),ncol=20))
-save(RESt,file="RES_wei_100.RData")
 sfStop()
-save(RES_case1,file="RES_wei_case1_all.RData")
