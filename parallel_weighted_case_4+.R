@@ -1,9 +1,11 @@
-##########sigma1=10,sigma2=0.5, estimate without sigma1
+##########Data is generated under the setting sigma_1=10,sigma_2=0.5
+##########Fit a joint model with B^{\omega}(t_0, t; \sigma_1)) replaced by  B^U (t_0, t),denote by case 4* in our paper
+##########That is, we approximate the flat weighted biomarker level with the uniformly weighted biomarker level
 library(snowfall)
 library(parallel)
 
 ################
-sfInit(parallel = TRUE, cpus = 1)
+sfInit(parallel = TRUE, cpus = 16)
 sfLibrary(survival)
 sfLibrary(JM)
 sfLibrary(joineR)
@@ -13,7 +15,7 @@ sfLibrary(progress)
 sfLibrary(MASS)
 sfLibrary(mvtnorm)
 sfLibrary(tensor)
-sfSource("source_case4+.R")
+sfSource(here::here("source_case4+.R"))
 ####################
 
 SIMULATE=function(s){
@@ -100,7 +102,5 @@ SIMULATE=function(s){
   
 }
 
-RES=sfLapply(101:200,SIMULATE)
-RES=t(matrix(unlist(RES),ncol=100))
-save(RES,file="RES_weighted_case_12_101_200.RData")
+RES=sfLapply(1:20,SIMULATE)
 sfStop()
