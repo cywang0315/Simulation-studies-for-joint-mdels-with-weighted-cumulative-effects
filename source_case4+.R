@@ -32,7 +32,7 @@ Nor_wei=function(s,sigma,t1,t2){
 
 
 
-#################### Calucate  \int_{t_0}^{t} w(t-s)B_{k,4}(s) ds for k=1,...,q 
+#################### Calculate  \int_{t_0}^{t} w(t-s)B_{k,4}(s) ds for k=1,...,q 
 cumwei_cubicbs=function(t0,tt,sigma){ # tt can be a vector
   if(any(t0>tt)){
     return("error: upper limit smaller than lower limit")
@@ -71,7 +71,7 @@ cumwei_cubicbs=function(t0,tt,sigma){ # tt can be a vector
   
 }
 
-
+#################### Calculate  1/(t-t_0)*\int_{t_0}^{t}B_{k,4}(s) ds for k=1,...,q
 cum_cubicbs=function(t0,tt){ # tt can be a vector
   if(any(t0>tt)){
     return("error: upper limit smaller than lower limit")
