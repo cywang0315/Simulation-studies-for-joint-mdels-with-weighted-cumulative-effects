@@ -5,7 +5,7 @@ library(snowfall)
 library(parallel)
 
 ################
-sfInit(parallel = TRUE, cpus = 1)
+sfInit(parallel = TRUE, cpus = 16)
 sfLibrary(survival)
 sfLibrary(JM)
 sfLibrary(joineR)
@@ -15,8 +15,7 @@ sfLibrary(progress)
 sfLibrary(MASS)
 sfLibrary(mvtnorm)
 sfLibrary(tensor)
-sfSource("source_case3+.R")
-#sfSource(here::here("source_case3+.R"))
+sfSource(here::here("source_case3+.R"))
 ####################
 
 SIMULATE=function(s){
@@ -103,8 +102,8 @@ SIMULATE=function(s){
   
 }
 
-RES=sfLapply(1:16,SIMULATE)
-RESt=t(matrix(unlist(RES),ncol=16))
-save(RES,file="RES_weighted_case_13_1_100.RData")
+RES=sfLapply(1:100,SIMULATE)
+RESt=t(matrix(unlist(RES),ncol=100))
+save(RESt,file="RES_weighted_case_3+_1_100.RData")
 sfStop()
 
