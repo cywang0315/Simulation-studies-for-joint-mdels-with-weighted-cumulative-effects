@@ -5,8 +5,12 @@ Article: Weighted Biomarker Variability in Joint Analysis of Longitudinal and Ti
 
 Authors: Chunyu Wang, Jiaming Shen, Christiana Charalambous, and Jianxin Pan.
 
-This folder contains R commands and functions required to run the simulations presented in the paper. Four main R scripts are listed: 'simulation_case1.R', 'simulation_case2.R', 'simulation_case3.R', and 'simulation_case4.R' along with their source files.
+This folder contains R commands and functions required to run the simulations presented in the paper. Three main R scripts are listed: 'parallel_weighted_case_1.R', 'parallel_weighted_case_3+.R', 'parallel_weighted_case_4+.R', along with their source files.
 
-The source files are similar except for the function 'gendat' for generating the simulated data in difference cases. Case 3 and Case 4 involve an additional function 'knot.sel' for selecting the best knot sequence among the candidate knot patterns.
+'parallel_weighted_case_1.R' along with its source file 'source_case1.R' works for the setting where both $\sigma_1$ and $\sigma_2$ are unknown and required to be estimated from the data. So 'parallel_weighted_case_1.R' and 'source_case1.R' are applicable to the estimation of case1, case2, case3 and case4 showed in the paper by changing the values of sig1ture and sig2ture in the gendat function. 
 
-Due to data protection and confidentiality, the code for analysing the MRC trial is not included. 
+ 'parallel_weighted_case_3+.R' along with its source file 'source_case3+.R' corresponds to the case 3* described in the paper: the true value of sigma2 is 10 (sig2true=10) but an approximate model without sigma2 is used to fit the dataset generated from case 3.   
+
+ 'parallel_weighted_case_4+.R' along with its source file 'source_case4+.R' corresponds to the case 4* described in the paper: the true value of sigma1 is 10 (sig1true=10) but an approximate model without sigma1 is used to fit the dataset generated from case 4. 
+
+Due to data protection and confidentiality, the code for analysing the MRC elderly trial is not included. 
