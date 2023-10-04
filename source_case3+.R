@@ -860,34 +860,6 @@ est.EM=function(loglik,data,data.id,gamma,alpha1,alpha2,cumbase,beta,sigma2,D,kn
     
     Ibeta=Ibeta+(-(sigma.2)^(-2)*2/N)*t(des.Y)%*%res%*%t(res)%*%des.Y+(sigma.2)^(-1)*t(des.Y)%*%des.Y
     
-    #### Q function approximated by EXPONIENTIAL LAPLACE
-    # Q.fun=0
-    # for(i in data.id$id){
-    #   Zi=des.Y[data$id==i,]
-    #   Xi=Zi
-    #   Yi=data$Y[data$id==i]
-    #   bi=b_set[data.id$id==i,]
-    #   a=unique(data.id$Time[(data.id$Time<=Time[data.id$id==i])&(data.id$delta==1)])
-    #   log.p.b=dmvnorm(bi,mean=rep(0,q),sigma=D,log=TRUE)
-    #   log.p.Yb=sum(dnorm(Yi,mean=c(Xi%*%beta+Zi%*%bi),sd=sqrt(sigma2),log=TRUE)) # p(Y|b)
-    #   log.hazard=0
-    #   log.s=0
-    #   if(length(a)>0){
-    #     log.hazard=ifelse(delta[data.id$id==i]==0,0,log(lambda0(Time[data.id$id==i]))+c(gamma*W[data.id$id==i])+alpha1*(des.T[match(Time[data.id$id==i],data.id$Time[data.id$delta==1]),]%*%(beta+bi))+
-    #                         alpha2*sqrt(t(beta+bi)%*%K.2[,,match(Time[data.id$id==i],data.id$Time[data.id$delta==1])]%*%(beta+bi)))
-    #     
-    #     if(length(a)>1){
-    #       log.s=exp(c(gamma*W[data.id$id==i]))*sum(sapply(a,lambda0)*exp(alpha1*(des.T[match(a,data.id$Time[data.id$delta==1]),]%*%(beta+bi))+
-    #                                                                          alpha2*apply(K.2[,,match(a,data.id$Time[data.id$delta==1])],3,function(y) sqrt(t(beta+bi)%*%y%*%(beta+bi)))))
-    #       
-    #     }else{
-    #       log.s=exp(c(gamma*W[data.id$id==i]))*sum(sapply(a,lambda0)*exp(alpha1*(des.T[match(a,data.id$Time[data.id$delta==1]),]%*%(beta+bi))+
-    #                                                                          alpha2*sqrt(t(beta+bi)%*%K.2[,,match(a,data.id$Time[data.id$delta==1])]%*%(beta+bi))))
-    #     }
-    #   }
-    #   Q.fun=Q.fun+(log.hazard-log.s+log.p.Yb+log.p.b-q/2)
-    # }
-    # print(Q.fun)
     
     
     ### UPDATE PARAMETERS
@@ -942,64 +914,6 @@ est.EM=function(loglik,data,data.id,gamma,alpha1,alpha2,cumbase,beta,sigma2,D,kn
       
       cumbase=data.frame(hazard=0,time=c(0,sort(unique(data$Time[data$delta==1]))))
       cumbase[,1]=cumsum(c(0,cc))
-      
-      
-      # ####NEW Q function; defined as an internal function so that data, parameters and bi can be detected.
-      # Q.fun.up.new=0
-      # for(i in data.id$id){
-      #   Zi=des.Y[data$id==i,]
-      #   Xi=Zi
-      #   Yi=data$Y[data$id==i]
-      #   bi=b_set[data.id$id==i,]
-      #   a=unique(data.id$Time[(data.id$Time<=Time[data.id$id==i])&(data.id$delta==1)])
-      #   inv.Fishi=inv.Fish_set[,,data.id$id==i]
-      #   log.p.b=dmvnorm(bi,mean=rep(0,q),sigma=Dnew,log=TRUE)
-      #   log.p.Yb=sum(dnorm(Yi,mean=c(Xi%*%betanew+Zi%*%bi),sd=sqrt(sigma2new),log=TRUE)) # p(Y|b)
-      #   log.hazard=0
-      #   log.s=0
-      #   Fishinew=t(Zi)%*%Zi/sigma2new+solve(Dnew) ##length(a)=0 means only longitudinal part left
-      #   if(length(a)>0){
-      #     log.hazard=ifelse(delta[data.id$id==i]==0,0,log(lambda0(Time[data.id$id==i]))+c(gammanew*W[data.id$id==i])+alpha1new*(des.T[match(Time[data.id$id==i],data.id$Time[data.id$delta==1]),]%*%(betanew+bi))+
-      #                         alpha2new*sqrt(t(betanew+bi)%*%K.2[,,match(Time[data.id$id==i],data.id$Time[data.id$delta==1])]%*%(betanew+bi)))
-      #     if(length(a)>1){
-      #       weinew=c(exp(c(gammanew*W[data.id$id==i]))*sapply(a,lambda0)*exp(alpha1new*(des.T[match(a,data.id$Time[data.id$delta==1]),]%*%(betanew+bi))+
-      #                                                                          alpha2new*apply(K.2[,,match(a,data.id$Time[data.id$delta==1])],3,function(y) sqrt(t(betanew+bi)%*%y%*%(betanew+bi)))))
-      #       
-      #       ZKnew=alpha1new*des.T[match(a,data.id$Time[data.id$delta==1]),]+alpha2new*apply(K.2[,,match(a,data.id$Time[data.id$delta==1])],3,function(y) (c(t(betanew+bi)%*%y%*%(betanew+bi)))^(-1/2))*
-      #         t(apply(K.2[,,match(a,data.id$Time[data.id$delta==1])],3,function(y) t(y)%*%betanew)+apply(K.2[,,match(a,data.id$Time[data.id$delta==1])],3,function(y) y%*%bi))
-      #       
-      #       Fishinew=tensor(array(apply(ZKnew,1,tcrossprod),dim=c(q,q,length(a)))+
-      #                         alpha2new*array(apply(K.2[,,match(a,data.id$Time[data.id$delta==1])],3,function(y) (c(t(betanew+bi)%*%y%*%(betanew+bi)))^(-1/2)*y),dim=c(q,q,length(a)))-
-      #                         alpha2new*array(apply(K.2[,,match(a,data.id$Time[data.id$delta==1])],3,function(y) (c(t(betanew+bi)%*%y%*%(betanew+bi)))^(-3/2)*tcrossprod(t(y)%*%betanew+y%*%bi)),dim=c(q,q,length(a))),
-      #                       weinew,3,1)+Fishinew
-      #       
-      #     }else{
-      #       weinew=c(exp(c(gammanew*W[data.id$id==i]))*sapply(a,lambda0)*exp(alpha1new*(des.T[match(a,data.id$Time[data.id$delta==1]),]%*%(betanew+bi))+
-      #                                                                          alpha2new*sqrt(t(betanew+bi)%*%K.2[,,match(a,data.id$Time[data.id$delta==1])]%*%(betanew+bi))))
-      #       
-      #       ZKnew=alpha1new*des.T[match(a,data.id$Time[data.id$delta==1]),]+
-      #         alpha2new*((c(t(betanew+bi)%*%K.2[,,match(a,data.id$Time[data.id$delta==1])]%*%(betanew+bi)))^(-1/2)*(t(K.2[,,match(a,data.id$Time[data.id$delta==1])])%*%betanew+K.2[,,match(a,data.id$Time[data.id$delta==1])]%*%bi))
-      #       
-      #       Fishinew=weinew*(tcrossprod(ZKnew)-alpha2new*(c(t(betanew+bi)%*%K.2[,,match(a,data.id$Time[data.id$delta==1])]%*%(betanew+bi)))^(-3/2)*tcrossprod(t(K.2[,,match(a,data.id$Time[data.id$delta==1])])%*%betanew+K.2[,,match(a,data.id$Time[data.id$delta==1])]%*%bi)+
-      #                          alpha2new*(c(t(betanew+bi)%*%K.2[,,match(a,data.id$Time[data.id$delta==1])]%*%(betanew+bi)))^(-1/2)*K.2[,,match(a,data.id$Time[data.id$delta==1])])+Fishinew
-      #       
-      #       
-      #     }
-      #     
-      #     log.s=sum(weinew)
-      #   }
-      #   
-      #   
-      #   if(delta[data.id$id==i]==1){
-      #     Fishinew=-alpha2new*(-(c(t(betanew+bi)%*%K.2[,,match(Time[data.id$id==i],data.id$Time[data.id$delta==1])]%*%(betanew+bi)))^(-3/2)*tcrossprod(t(K.2[,,match(Time[data.id$id==i],data.id$Time[data.id$delta==1])])%*%betanew+K.2[,,match(Time[data.id$id==i],data.id$Time[data.id$delta==1])]%*%bi)+
-      #                            +(c(t(betanew+bi)%*%K.2[,,match(Time[data.id$id==i],data.id$Time[data.id$delta==1])]%*%(betanew+bi)))^(-1/2)*K.2[,,match(Time[data.id$id==i],data.id$Time[data.id$delta==1])])+Fishinew
-      #   }
-      #   
-      #   Q.fun.up.new=Q.fun.up.new+(log.hazard-log.s+log.p.Yb+log.p.b+sum(diag(inv.Fishi%*%(-Fishinew)))/2)
-      #   
-      # }
-      # 
-      # cat("UPDATED Q FUNCTION=",Q.fun.up.new,"\n")
       
       
       logLikmcnew=logLik(data,data.id,gammanew,alpha1new,alpha2new,betanew,sigma2new,Dnew,cumbase,knots,Q.2,sig1,L=2000)
